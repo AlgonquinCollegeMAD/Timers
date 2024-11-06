@@ -1,31 +1,34 @@
 import SwiftUI
 
-struct TimersListView: View {
-    var timers: [Timer] = [
-        Timer(duration: 100)
-    ]
-    
-    var body: some View {
-        NavigationStack {
-            List {
-                ForEach(timers) { timer in
-                    Text("\(timer.duration)")
-                }
-            }
-            .navigationTitle("Timers")
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        //noop
-                    } label: {
-                        Text("Add")
-                    }
-                }
-            }
+struct TimersListView: View {  
+  @State private var isPresented = true
+  @ObservedObject var model = TimersListViewModel()
+  
+  var body: some View {
+    NavigationStack {
+      List {
+        ForEach(model.timers) { timer in
+          Text("\(timer.duration)")
         }
+      }
+      .navigationTitle("Timers")
+      .toolbar {
+        ToolbarItem {
+          Button {
+            isPresented.toggle()
+          } label: {
+            Text("Add")
+          }
+        }
+      }
+      .sheet(isPresented: $isPresented) {
+        TimerView(shouldClose: $isPresented)
+      }
     }
+    .environmentObject(model)
+  }
 }
 
 #Preview {
-    TimersListView()
+  TimersListView()
 }
