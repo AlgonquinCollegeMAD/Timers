@@ -10,4 +10,7 @@ struct Timer: Identifiable {
     var isRunning: Bool {
         elapsed < duration
     }
+    var remaining: TimeInterval {
+      max(0, duration - elapsed)
+    }
 }
